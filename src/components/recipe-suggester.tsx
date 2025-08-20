@@ -26,19 +26,14 @@ interface ErrorState {
   };
 }
 
-interface InitialState {
-    data: null;
-    error: {
-        ingredients?: string[];
-        _server?: string[];
-    };
-}
+type RecipeState = SuccessState | ErrorState;
 
-type RecipeState = SuccessState | ErrorState | InitialState;
-
-const initialState: RecipeState = {
+const initialState: ErrorState = {
   data: null,
-  error: {},
+  error: {
+    ingredients: [],
+    _server: [],
+  },
 };
 
 function SubmitButton() {
