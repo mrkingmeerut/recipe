@@ -28,7 +28,10 @@ interface ErrorState {
 
 interface InitialState {
     data: null;
-    error: null;
+    error: {
+        ingredients?: string[];
+        _server?: string[];
+    };
 }
 
 type RecipeState = SuccessState | ErrorState | InitialState;
