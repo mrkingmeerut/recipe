@@ -46,6 +46,11 @@ function SubmitButton() {
   );
 }
 
+// 🔍 Type guard
+function isSuccessState(state: RecipeState): state is SuccessState {
+  return state.data !== null;
+}
+
 export function RecipeSuggester() {
   const [state, formAction] = useActionState(handleSuggestRecipe, initialState);
   const { toast } = useToast();
@@ -59,18 +64,39 @@ export function RecipeSuggester() {
         description: state.error._server[0],
       });
     }
-    if (state.data) {
-        formRef.current?.reset();
+    if (isSuccessState(state)) {
+      formRef.current?.reset();
     }
   }, [state, toast]);
+
+  // ✅ Optional client-side validation (can be expanded)
+  const customFormAction = async (formData: FormData) => {
+    const ingredients = formData.get("ingredients")?.toString().trim();
+
+    if (!ingredients) {
+      toast({
+        variant: "destructive",
+        title: "Missing ingredients",
+        description: "Please enter at least one ingredient.",
+      });
+      return;
+    }
+
+    return formAction(formData);
+  };
 
   return (
     <div className="max-w-2xl mx-auto">
       <Card className="shadow-lg">
         <CardContent className="p-6">
-          <form ref={formRef} action={formAction} className="space-y-4">
+          <form ref={formRef} action={customFormAction} className="space-y-4">
             <div>
+              {/* ✅ Accessible label */}
+              <label htmlFor="ingredients" className="sr-only">
+                Ingredients
+              </label>
               <Textarea
+                id="ingredients"
                 name="ingredients"
                 placeholder="e.g., chicken breast, broccoli, olive oil, garlic"
                 className="min-h-[100px] text-base"
@@ -88,12 +114,14 @@ export function RecipeSuggester() {
           </form>
         </CardContent>
       </Card>
-      
-      {state.data && (
+
+      {isSuccessState(state) && (
         <div className="mt-8">
           <Card className="animate-in fade-in-50 duration-500">
             <CardHeader>
-              <CardTitle className="font-headline text-2xl text-primary">{state.data.recipeName}</CardTitle>
+              <CardTitle className="font-headline text-2xl text-primary">
+                {state.data.recipeName}
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
