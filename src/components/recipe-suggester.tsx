@@ -35,7 +35,7 @@ type RecipeState = SuccessState | ErrorState | InitialState;
 
 const initialState: RecipeState = {
   data: null,
-  error: null,
+  error: {},
 };
 
 function SubmitButton() {
