@@ -6,8 +6,9 @@ const nextConfig = {
   },
   trailingSlash: true,
   env: {
-    GEMINI_API_KEY: process.env.GEMINI_API_KEY || 'development',
-    GOOGLE_API_KEY: process.env.GOOGLE_API_KEY || 'development'
+    GEMINI_API_KEY: process.env.GEMINI_API_KEY,
+    GOOGLE_API_KEY: process.env.GOOGLE_API_KEY,
+    GEMINI_API_URL: 'https://generativelanguage.googleapis.com/v1beta'
   }
 }
 
